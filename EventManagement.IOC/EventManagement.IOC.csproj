@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EventManagement.BLL\EventManagement.BLL.csproj" />
+    <ProjectReference Include="..\EventManagement.DAL\EventManagement.DAL.csproj" />
+    <ProjectReference Include="..\EventManagement.Utility\EventManagement.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
