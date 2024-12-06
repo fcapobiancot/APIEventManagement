@@ -34,6 +34,8 @@ namespace EventManagement.IOC
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRolService, RolService>();
+            services.AddScoped<IEventService, EventService>();
+ 
 
         }
 

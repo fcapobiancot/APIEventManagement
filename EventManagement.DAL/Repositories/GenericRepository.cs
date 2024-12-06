@@ -22,6 +22,13 @@ namespace EventManagement.DAL.Repositories
             this.dbcontext = dbcontext;
         }
 
+        public async Task<TModel> CreateAsync(TModel model)
+        {
+            await this.dbcontext.Set<TModel>().AddAsync(model);
+            await this.dbcontext.SaveChangesAsync();
+            return model;
+        }
+
         public async Task<TModel> Get(Expression<Func<TModel, bool>> filter)
         {
             try
