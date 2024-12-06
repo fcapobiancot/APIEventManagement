@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EventManagement.Model;
+﻿namespace EventManagement.Model;
 
 public partial class Payment
 {

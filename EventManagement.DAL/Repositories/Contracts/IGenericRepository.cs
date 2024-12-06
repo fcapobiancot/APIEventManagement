@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-
-
-// Aqui se implementan los metodos para trabajar de manera generica con todos los modelos de la base de datos (para cada tabla)
+﻿using System.Linq.Expressions;
 namespace EventManagement.DAL.Repositories.Contracts
 {
     public interface IGenericRepository<TModel> where TModel : class

@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using AutoMapper;
+﻿using AutoMapper;
 using EventManagement.BLL.Services.Contracts;
 using EventManagement.DAL.Repositories.Contracts;
 using EventManagement.DTO;
 using EventManagement.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace EventManagement.BLL.Services
 {
@@ -24,16 +17,17 @@ namespace EventManagement.BLL.Services
             this.userRepository = userRepository;
             _mapper = mapper;
         }
+
         public async Task<List<UserDTO>> ListUsers()
         {
             try
             {
                 var queryUser = await this.userRepository.Consult();
-                var userList = queryUser.Include(rol => rol.Role).ToList();
+                var userList = queryUser.ToList();
 
                 return _mapper.Map<List<UserDTO>>(userList);
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -48,11 +42,10 @@ namespace EventManagement.BLL.Services
                 { 
                     throw new Exception("No existe el usuario");
                 }
-                 
-                User returnUser = queryUser.Include(rol => rol.Role).First();
+
+                User returnUser = queryUser.First();
 
                 return _mapper.Map<SessionDTO>(returnUser); 
-
             }
             catch
             {
@@ -72,10 +65,9 @@ namespace EventManagement.BLL.Services
                 
                 var query = await this.userRepository.Consult(u => u.Id == userCreated.Id);
 
-                userCreated = query.Include(rol => rol.Role).First();
+                userCreated = query.First();
 
                 return _mapper.Map<UserDTO>(userCreated);
-
             }
             catch (Exception ex)
             {
@@ -99,9 +91,6 @@ namespace EventManagement.BLL.Services
                 foundUser.Name = userModel.Name;
                 foundUser.Email = userModel.Email;
                 foundUser.Password = userModel.Password;
-                foundUser.RoleId = userModel.RoleId;
-                foundUser.Socials = userModel.Socials;
-                foundUser.ProfilePic = userModel.ProfilePic;
 
                 bool answer = await this.userRepository.Update(foundUser);
 
@@ -111,7 +100,6 @@ namespace EventManagement.BLL.Services
                 }
 
                 return answer;
-
             }
             catch
             {
@@ -143,8 +131,5 @@ namespace EventManagement.BLL.Services
                 throw;
             }
         }
-             
-
-
     }
 }

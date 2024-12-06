@@ -3,11 +3,6 @@ using EventManagement.DAL.Repositories.Contracts;
 using EventManagement.DTO;
 using EventManagement.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventManagement.BLL.Services
 {
@@ -22,13 +17,10 @@ namespace EventManagement.BLL.Services
 
         public async Task<List<Event>> ListEvents(int userId)
         {
-            try {
-
+            try
+            {
                 var events = await this.eventRepository.Consult(e => e.UserEvents.Any(ue => ue.UserId == userId && ue.IsCreator == true));
-
-                var userEvents = events.ToList();
-
-                return userEvents;
+                return events.ToList();
             }
             catch
             {
@@ -36,12 +28,10 @@ namespace EventManagement.BLL.Services
             }
         }
 
-
         public async Task<Event> CreateEvent(EventCreationDto eventDto, int creatorUserId)
         {
             try
             {
-                // Crear el evento base
                 var newEvent = new Event
                 {
                     Name = eventDto.Name,
@@ -54,20 +44,18 @@ namespace EventManagement.BLL.Services
                     Price = eventDto.IsPaid ? eventDto.Price : null,
                     Category = eventDto.Category,
                     RegistrationDate = DateTime.UtcNow,
-                    IsActive = true // Nuevos eventos son activos por defecto
+                    IsActive = true
                 };
 
-                // Asignar el creador
                 newEvent.UserEvents.Add(new UserEvent
                 {
                     UserId = creatorUserId,
                     IsCreator = true,
                     UserMarkAttendance = true,
                     OrganizerMarkAttendance = true,
-                    HasPaid = !newEvent.IsPaid // Si es gratuito, marcar como pagado
+                    HasPaid = !newEvent.IsPaid 
                 });
 
-                // Asignar accesos privados si aplica
                 if (eventDto.IsPrivate && eventDto.PrivateEventAccessUserIds != null)
                 {
                     foreach (var userId in eventDto.PrivateEventAccessUserIds)
@@ -80,10 +68,8 @@ namespace EventManagement.BLL.Services
                     }
                 }
 
-                // Guardar el evento en la base de datos
                 await eventRepository.CreateAsync(newEvent);
 
-                // Consultar el evento creado para incluir navegaciones
                 var query = await eventRepository.Consult(u => u.Id == newEvent.Id);
                 var eventWithCategory = query
                     .Include(cat => cat.CategoryNavigation)
@@ -98,6 +84,17 @@ namespace EventManagement.BLL.Services
             }
         }
 
-
+        public async Task<List<Event>> GetAllEvents()
+        {
+            try
+            {
+                var events = await eventRepository.Consult(e => e.IsPrivate == false);
+                return events.ToList();
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
 using EventManagement.Model;
 
 namespace EventManagement.DAL.DBContext;
@@ -23,15 +20,11 @@ public partial class EventManagementContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<Menu> Menus { get; set; }
-
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<PrivateEventAccess> PrivateEventAccesses { get; set; }
-
-    public virtual DbSet<Rol> Rols { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -125,27 +118,6 @@ public partial class EventManagementContext : DbContext
                 .HasConstraintName("FK__Event__category__3D5E1FD2");
         });
 
-        modelBuilder.Entity<Menu>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Menu__3213E83F85B71AF4");
-
-            entity.ToTable("Menu");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Icon)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("icon");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-            entity.Property(e => e.Url)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("url");
-        });
-
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83FE7D1DF7F");
@@ -232,40 +204,6 @@ public partial class EventManagementContext : DbContext
                 .HasConstraintName("FK__PrivateEv__userI__5629CD9C");
         });
 
-        modelBuilder.Entity<Rol>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Rol__3213E83F03C945D6");
-
-            entity.ToTable("Rol");
-
-            entity.HasIndex(e => e.Name, "UQ__Rol__72E12F1B340BD3F5").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-
-            entity.HasMany(d => d.Menus).WithMany(p => p.Roles)
-                .UsingEntity<Dictionary<string, object>>(
-                    "MenuRol",
-                    r => r.HasOne<Menu>().WithMany()
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MenuRol__menuID__4AB81AF0"),
-                    l => l.HasOne<Rol>().WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MenuRol__roleID__49C3F6B7"),
-                    j =>
-                    {
-                        j.HasKey("RoleId", "MenuId").HasName("PK__MenuRol__9E2C41E328DD3A4D");
-                        j.ToTable("MenuRol");
-                        j.IndexerProperty<int>("RoleId").HasColumnName("roleID");
-                        j.IndexerProperty<int>("MenuId").HasColumnName("menuID");
-                    });
-        });
-
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F434E4A77");
@@ -287,17 +225,6 @@ public partial class EventManagementContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("password");
-            entity.Property(e => e.ProfilePic)
-                .HasColumnType("text")
-                .HasColumnName("profilePic");
-            entity.Property(e => e.RoleId).HasColumnName("roleID");
-            entity.Property(e => e.Socials)
-                .HasColumnType("text")
-                .HasColumnName("socials");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Users)
-                .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK__Users__roleID__46E78A0C");
         });
 
         modelBuilder.Entity<UserEvent>(entity =>

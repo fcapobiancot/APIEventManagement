@@ -1,24 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Microsoft.AspNetCore.Mvc;
 using EventManagement.BLL.Services.Contracts;
 using EventManagement.API.Utility;
-using EventManagement.Model;
 using EventManagement.DTO;
-using EventManagement.BLL.Services;
+
 namespace EventManagement.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService userService;
-
-        public UserController(IUserService userService)
-        {
-            this.userService = userService;
-        }
-
         [HttpGet]
         [Route("UserList")]
         public async Task<IActionResult> UserList()

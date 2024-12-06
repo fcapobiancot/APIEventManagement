@@ -1,16 +1,7 @@
-﻿using EventManagement.BLL.Services;
-using EventManagement.BLL.Services.Contracts;
-using EventManagement.DTO;
+﻿using EventManagement.BLL.Services.Contracts;
 using EventManagement.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using EventManagement.BLL.Services.Contracts;
 using EventManagement.API.Utility;
-using EventManagement.Model;
-using EventManagement.DTO;
-using EventManagement.BLL.Services;
-using System.Security.Claims;
 
 namespace EventManagement.API.Controllers
 {
@@ -32,7 +23,6 @@ namespace EventManagement.API.Controllers
             var rsp = new Response<Event>();
             try
             {
-                // Usa el CreatorUserId proporcionado en el cuerpo de la solicitud
                 if (model.CreatorUserId <= 0)
                 {
                     rsp.status = false;
@@ -57,7 +47,6 @@ namespace EventManagement.API.Controllers
         public async Task<IActionResult> GetMyEvents(int userId)
         {
             var rsp = new Response<List<Event>>();
-
             try
             {
                 rsp.status = true;
@@ -72,9 +61,23 @@ namespace EventManagement.API.Controllers
             return Ok(rsp);
         }
 
+        [HttpGet]
+        [Route("GetAllEvents")]
+        public async Task<IActionResult> GetAllEvents()
+        {
+            var rsp = new Response<List<Event>>();
+            try
+            {
+                rsp.status = true;
+                rsp.data = await eventService.GetAllEvents();
+            }
+            catch (Exception ex)
+            {
+                rsp.status = false;
+                rsp.mesage = ex.Message;
+            }
+
+            return Ok(rsp);
+        }
     }
-
-    
-
 }
-

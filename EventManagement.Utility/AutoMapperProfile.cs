@@ -15,7 +15,7 @@ namespace EventManagement.Utility
         {
             #region Session
             CreateMap<User, SessionDTO>()
-                .ForMember(target => target.RolDescription, opt => opt.MapFrom(source => source.Role.Name));
+                .ForMember(target => target.RolDescription, opt => opt.Ignore());
             #endregion
 
             #region Login
@@ -23,11 +23,11 @@ namespace EventManagement.Utility
             #endregion
 
             #region User
-            CreateMap<User, UserDTO>()
-                .ForMember(target => target.RolName, opt => opt.MapFrom(source => source.Role.Name));
 
-            CreateMap<UserDTO, User>()
-                .ForMember(target => target.Role, opt => opt.Ignore());
+            CreateMap<User, UserDTO>();
+
+            CreateMap<UserDTO, User>();
+
             #endregion
 
         }
