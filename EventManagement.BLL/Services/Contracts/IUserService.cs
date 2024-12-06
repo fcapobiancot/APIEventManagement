@@ -17,5 +17,6 @@ namespace EventManagement.BLL.Services.Contracts
         Task<UserDTO> CreateUser(UserDTO model);
         Task<bool> UpdateUser(UserDTO model);
         Task<bool> DeleteUser(int id);
+        
     }
 }

@@ -13,5 +13,7 @@ namespace EventManagement.BLL.Services.Contracts
         Task<Event> CreateEvent(EventCreationDto eventDto, int creatorUserId);
         Task<List<Event>> GetAllEvents();
         
+        
+        
     }
 }

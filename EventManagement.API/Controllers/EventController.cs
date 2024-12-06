@@ -79,5 +79,7 @@ namespace EventManagement.API.Controllers
 
             return Ok(rsp);
         }
+        
+        
     }
 }

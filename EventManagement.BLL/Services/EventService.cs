@@ -96,5 +96,7 @@ namespace EventManagement.BLL.Services
                 throw;
             }
         }
+        
+        
     }
 }
