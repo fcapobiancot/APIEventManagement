@@ -83,17 +83,24 @@ namespace EventManagement.DAL.Repositories
                 throw;
             }
         }
-        public async Task<IQueryable<TModel>> Consult(Expression<Func<TModel, bool>> filter = null)
+        public async Task<IQueryable<TModel>> Consult(Expression<Func<TModel, bool>> filter = null, params Expression<Func<TModel, object>>[] includes)
         {
-            try
+            IQueryable<TModel> query = dbcontext.Set<TModel>();
+
+            if (includes != null)
             {
-                IQueryable<TModel> queryModel = filter == null ? this.dbcontext.Set<TModel>() : this.dbcontext.Set<TModel>().Where(filter);
-                return queryModel;
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
             }
-            catch
+
+            if (filter != null)
             {
-                throw;
+                query = query.Where(filter);
             }
+
+            return await Task.FromResult(query);
         }
     }
 }

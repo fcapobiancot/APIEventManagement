@@ -17,5 +17,6 @@ public class EventCreationDto
     public int Category { get; set; }
     public List<int>? PrivateEventAccessUserIds { get; set; }
     public int CreatorUserId { get; set; } // Nuevo campo
+    public string? ImageUrl { get; set; }
 }
 
