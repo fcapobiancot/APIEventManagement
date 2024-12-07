@@ -146,6 +146,26 @@ namespace EventManagement.API.Controllers
             return Ok(rsp);
         }
         
+        [HttpPost]
+        [Route("EnrollTeam")]
+        public async Task<IActionResult> EnrollTeam([FromBody] TeamCreationDto model)
+        {
+            var rsp = new Response<Team>();
+            try
+            {
+                rsp.status = true;
+                rsp.data = await eventService.EnrollTeamToEvent(model);
+            }
+            catch (Exception ex)
+            {
+                rsp.status = false;
+                rsp.mesage = ex.Message;
+                return BadRequest(rsp);
+            }
+
+            return Ok(rsp);
+        }
+        
         
     }
 }

@@ -13,6 +13,7 @@ public partial class EventManagementContext : DbContext
         : base(options)
     {
     }
+    public DbSet<Team> Teams { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
 

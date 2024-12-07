@@ -12,5 +12,7 @@ namespace EventManagement.BLL.Services.Contracts
         Task<Comment> AddCommentToEvent(CommentCreationDto commentDto); 
         
         Task<Event> GetEventById(int eventId);
+
+        Task<Team> EnrollTeamToEvent(TeamCreationDto teamDto);
     }
 }

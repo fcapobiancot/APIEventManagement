@@ -10,13 +10,19 @@ namespace EventManagement.BLL.Services
     {
         private readonly IGenericRepository<Event> eventRepository;
         private readonly IGenericRepository<Comment> commentRepository;
+        private readonly IGenericRepository<Team> teamRepository;
+        private readonly IGenericRepository<TeamMember> teamMemberRepository;
 
         public EventService(
             IGenericRepository<Event> eventRepository, 
-            IGenericRepository<Comment> commentRepository)
+            IGenericRepository<Comment> commentRepository,
+            IGenericRepository<Team> teamRepository,
+            IGenericRepository<TeamMember> teamMemberRepository)
         {
             this.eventRepository = eventRepository;
             this.commentRepository = commentRepository;
+            this.teamRepository = teamRepository;
+            this.teamMemberRepository = teamMemberRepository;
         }
 
 
@@ -151,7 +157,6 @@ namespace EventManagement.BLL.Services
         {
             try
             {
-                // Buscar el evento por su ID e incluir los comentarios relacionados
                 var eventDetails = await eventRepository.Consult(e => e.Id == eventId, e => e.Comments);
                 var result = eventDetails.FirstOrDefault();
 
@@ -166,6 +171,32 @@ namespace EventManagement.BLL.Services
             {
                 throw new Exception($"Error al obtener el evento: {ex.Message}", ex);
             }
+        }
+
+        public async Task<Team> EnrollTeamToEvent(TeamCreationDto teamDto)
+        {
+            var existingEvent = await eventRepository.Get(e => e.Id == teamDto.EventId);
+            if (existingEvent == null)
+            {
+                throw new Exception("El evento especificado no existe.");
+            }
+
+            var newTeam = new Team
+            {
+                EventId = teamDto.EventId,
+                TeamName = teamDto.TeamName
+            };
+
+            newTeam.TeamMembers = teamDto.MemberNames.Select(m => new TeamMember
+            {
+                MemberName = m
+            }).ToList();
+
+            await teamRepository.CreateAsync(newTeam);
+            var savedTeamQuery = await teamRepository.Consult(t => t.Id == newTeam.Id, t => t.TeamMembers);
+            var savedTeam = savedTeamQuery.FirstOrDefault() ?? newTeam;
+
+            return savedTeam;
         }
         
         
